@@ -2,60 +2,46 @@ const USER_AGENT = 'Candidate-Test-Script/1.0';
 
 async function run() {
     const baseUrl = 'https://senior-nodejs-engineer.vercel.app';
+
     try {
-        // Step 1: Fetch and validate config
-        const cfgResponse = await fetch(`${baseUrl}/api/config`);
-        if (!cfgResponse.ok) {
-            throw new Error(`Config fetch failed: ${cfgResponse.status}`);
-        }
-        const cfg = await cfgResponse.json();
-        console.log('Config loaded:', cfg);  // Log for visibility
+        // Step 1: Get the config which contains the challenge string
+        const configResponse = await fetch(`${baseUrl}/api/config`);
 
-        // Assume config has a 'puzzle' field, e.g., { puzzle: '2 + 2' }. Solve it.
-        let solution = null;
-        if (cfg.puzzle) {
-            try {
-                solution = eval(cfg.puzzle);  // Simple solver; secure in real scenarios
-                console.log('Solved puzzle:', solution);
-            } catch (evalErr) {
-                console.error('Puzzle solve error:', evalErr);
-                solution = 'unsolved';
-            }
+        if (!configResponse.ok) {
+            throw new Error(`Failed to fetch config: ${configResponse.status}`);
         }
 
-        // Step 2: Prepare POST body using config/solution
-        const postBody = {
-            userAgent: USER_AGENT,
-            config: cfg,  // Include full config
-            solution: solution || 'default',  // Send solution if available
-            timestamp: new Date().toISOString()
-        };
+        const { challenge } = await configResponse.json();
 
-        // Step 3: Enhanced POST with USER_AGENT header
-        const res = await fetch(`${baseUrl}`, {
+        if (!challenge) {
+            throw new Error('No challenge found in config');
+        }
+
+        // Step 2: Send the challenge back in a POST request with correct headers
+        const response = await fetch(baseUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'User-Agent': USER_AGENT  // Now used!
+                'User-Agent': USER_AGENT  // This exact User-Agent is required!
             },
-            body: JSON.stringify(postBody)
+            body: JSON.stringify({ challenge })
         });
 
-        if (!res.ok) {
-            throw new Error(`POST failed: ${res.status}`);
+        if (!response.ok) {
+            throw new Error(`POST failed: ${response.status} ${response.statusText}`);
         }
 
-        const data = await res.json();
-        console.log('Success! Response:', data);  // This "solves" by outputting the result (e.g., a flag)
+        const data = await response.json();
 
-        // If this is a puzzle, the 'data' might contain the flag, e.g., data.flag = 'SOLVED!';
-        if (data.flag) {
-            console.log(`Puzzle Flag: ${data.flag}`);
-        }
+        // The successful response contains { flag: "..." }
+        console.log('Success! Flag:', data.flag);
+        return data.flag;
 
     } catch (error) {
         console.error('Error:', error.message || error);
+        throw error;
     }
 }
 
+// Run the script
 run();

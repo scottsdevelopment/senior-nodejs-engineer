@@ -1,9 +1,6 @@
 const USER_AGENT = 'Candidate-Test-Script/1.0';
 
 async function run() {
-    // Fetch config
-    // Note: In a real Vercel deployment, the base URL would be your deployment URL.
-    // For local testing, you might need to adjust this or mock the server.
     const baseUrl = 'https://senior-nodejs-engineer.vercel.app';
 
     try {

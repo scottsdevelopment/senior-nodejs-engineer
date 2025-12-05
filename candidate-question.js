@@ -4,16 +4,12 @@ async function run() {
     const baseUrl = 'https://senior-nodejs-engineer.vercel.app';
 
     try {
-        const cfg = await fetch(`${baseUrl}/api/config`);
+        await fetch(`${baseUrl}/api/config`);
 
-        const res = await fetch(`${baseUrl}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
+        const res = await fetch(`${baseUrl}`);
 
         const data = await res.json()
+        console.log(data);
     } catch (error) {
         console.error('Error:', error);
     }
