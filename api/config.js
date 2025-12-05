@@ -6,10 +6,9 @@ export default function handler(req, res) {
 
     res.status(200).json({
         message: 'Request to the "target" endpoint with the correct headers and JSON body will yield the secret key.',
-        headers: [{
-            'key': 'Authorization',
-            'value': 'Bearer SECRET-123'
-        }],
+        headers: {
+            'Authorization': 'Bearer SECRET-123'
+        },
         target: '/api/target',
         method: 'POST',
         body: {

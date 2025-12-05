@@ -12,13 +12,13 @@ async function run() {
 
         // Submit token
         const res = await fetch(`${baseUrl}${cfg.target}`, {
-            method: 'POST',
+            method: cfg.method,
             headers: {
                 'Content-Type': 'application/json',
                 'User-Agent': USER_AGENT,
-                'Authorization': cfg.requiredHeader
+                ...cfg.headers
             },
-            body: JSON.stringify({ token: cfg.token })
+            body: JSON.stringify(cfg.body)
         });
 
         const data = await res.json();
