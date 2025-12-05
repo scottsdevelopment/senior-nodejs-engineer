@@ -1,7 +1,7 @@
 export default function handler(req, res) {
     const allowedUserAgent = 'Candidate-Test-Script/1.0';
     if (req.headers['user-agent'] !== allowedUserAgent) {
-        return res.status(404);
+        return res.status(404).send('Not Found');
     }
 
     const auth = req.headers['authorization'] || '';

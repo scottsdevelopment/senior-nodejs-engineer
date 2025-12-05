@@ -4,7 +4,7 @@ async function run() {
     const baseUrl = 'https://senior-nodejs-engineer.vercel.app';
 
     try {
-        const cfg = await fetch(`${baseUrl}/api/config`).then(r => r.json());
+        const cfg = await fetch(`${baseUrl}/api/config`);
 
         const res = await fetch(`${baseUrl}`, {
             method: 'POST',
