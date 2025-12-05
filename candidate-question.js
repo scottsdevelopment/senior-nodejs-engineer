@@ -5,11 +5,7 @@ async function run() {
 
     try {
         await fetch(`${baseUrl}/api/config`);
-
-        const res = await fetch(`${baseUrl}`);
-
-        const data = await res.json()
-        console.log(data);
+        await fetch(`${baseUrl}`);
     } catch (error) {
         console.error('Error:', error);
     }
